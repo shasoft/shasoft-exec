@@ -62,10 +62,10 @@ class Exec {
             return arg;
         }).join(' ');
         if (this.m_show) terminal.hr("<FgMagenta>", '>');
-        if (this.m_show) terminal.write(">><Title>exec</>:", "<Command>" + runCommand + "</>");
+        if (this.m_show) terminal.writeLn(">><Title>exec</>:", "<Command>" + runCommand + "</>");
         if (this.m_show) {
             const colorFile = typeof (this.m_pwd) == 'undefined' ? 'Disable' : 'File';
-            terminal.write("   <Title>pwd</>:", "<" + colorFile + ">" + this.m_pwd + "</>");
+            terminal.writeLn("   <Title>pwd</>:", "<" + colorFile + ">" + this.m_pwd + "</>");
         }
         var ret = 0;
         var env = structuredClone(process.env);
@@ -105,7 +105,7 @@ class Exec {
                 if (this.m_show) console.log(ret);
             }
         } catch (error) {
-            terminal.write("\t <Fail>errorCode</> [<Fail>" + error.status + "</>]");
+            if (this.m_show) terminal.writeLn("\t <Fail>errorCode</> [<Fail>" + error.status + "</>]");
             ret = error.status;
         }
         // Если кодировку меняли
@@ -113,7 +113,7 @@ class Exec {
             // то вернуть её обратно
             childProcess.execSync('chcp ' + cp, options);
         }
-        if (this.m_show) terminal.write("<<<Title>exec</>:", "<Command>" + runCommand + "</>");
+        if (this.m_show) terminal.writeLn("<<<Title>exec</>:", "<Command>" + runCommand + "</>");
         if (this.m_show) terminal.hr("<FgMagenta>", '<');
         return ret;
     }
