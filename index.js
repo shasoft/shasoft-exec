@@ -40,8 +40,8 @@ class Exec {
     }
 
     // Получить результат работы в виде строки
-    asString(m_asString) {
-        this.m_asString = m_asString;
+    asString(asString) {
+        this.m_asString = asString;
         return this;
     }
 
