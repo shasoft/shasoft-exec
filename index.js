@@ -34,8 +34,8 @@ class Exec {
     }
 
     // Выводить результат выполнения
-    show(m_show) {
-        this.m_show = m_show;
+    show(show) {
+        this.m_show = show;
         return this;
     }
 
