@@ -21,6 +21,12 @@ class Exec {
         return this;
     }
 
+    // Добавить аргумент
+    arg(arg) {
+        this.m_args.push(arg);
+        return this;
+    }
+
     // Директория выполнения
     pwd(pwd) {
         this.m_pwd = pwd;
@@ -49,7 +55,7 @@ class Exec {
     run() {
         const args = [].concat(this.m_args).filter((arg) => {
             return typeof (arg) != 'undefined';
-        });;
+        });
         if (this.m_command) {
             args.unshift(this.m_command);
         }
@@ -67,7 +73,9 @@ class Exec {
             const colorFile = typeof (this.m_pwd) == 'undefined' ? 'Disable' : 'File';
             terminal.writeLn("   <Title>pwd</>:", "<" + colorFile + ">" + this.m_pwd + "</>");
         }
-        var ret = 0;
+
+        var resultCode = 0;
+        var ret = resultCode;
         var env = structuredClone(process.env);
         var hasEnv = false;
         for (const key in this.m_env) {
@@ -102,19 +110,22 @@ class Exec {
             const rc = childProcess.execSync(runCommand, options);
             if (this.m_asString) {
                 ret = rc.toString();
-                if (this.m_show) console.log(ret);
+                if (this.m_show) process.stdout.write(ret);
             }
         } catch (error) {
             if (this.m_show) terminal.writeLn("\t <Fail>errorCode</> [<Fail>" + error.status + "</>]");
-            ret = error.status;
+            ret = resultCode = error.status;
         }
         // Если кодировку меняли
         if (cp) {
             // то вернуть её обратно
             childProcess.execSync('chcp ' + cp, options);
         }
-        if (this.m_show) terminal.writeLn("<<<Title>exec</>:", "<Command>" + runCommand + "</>");
-        if (this.m_show) terminal.hr("<FgMagenta>", '<');
+        if (this.m_show) {
+            terminal.writeLn("<<<Title>exec</>:", "<Command>" + runCommand + "</>");
+            terminal.writeLn('resultCode: ' + (resultCode == 0 ? '<Success>' : '<Fail>') + resultCode);
+            terminal.hr("<FgMagenta>", '<');
+        }
         return ret;
     }
 }
